@@ -16,14 +16,15 @@ function Congrats() {
           {/* Congrats Message */}
           <h2 className="text-2xl font-bold text-gray-800">Congratulations!</h2>
           <h1 className="text-center mt-4">
-            Your New password has been successfully created!
-          </h1>
-          
- 
+            Your New password has been successfully created.
+            </h1>
+            <h1>
           {/* Optional button or link to go back to the login page */}
-          <a href="/" className="mt-6 text-blue-500 hover:underline">
-            Click here to go to the login page
+          <a href="/" className=" mt-6 text-blue-500 hover:underline">
+            Click here
           </a>
+          {''} to go to the login page
+          </h1>
         </div>
       </div>
     </div>

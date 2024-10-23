@@ -12,6 +12,10 @@ function Registration() {
         mobileNo: '',
         projectName: ''
     });
+    // Function to handle numeric-only input
+    const handleNumericInput = (e) => {
+        e.target.value = e.target.value.replace(/\D/g, ""); // Replace any non-numeric characters
+    };
 
     const navigate = useNavigate();
 
@@ -83,42 +87,162 @@ function Registration() {
                 <div className="bg-white border-2 border-orange-400 rounded-xl shadow-lg p-3 relative">
                     <img src={logo} width={150} height={100} alt="logo" className="mb-2 ml-20" />
                     <Link to="/">
-                        <button className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-gray-800">
+                        <button className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-orange-500 hover:scale-110 transition duration-300 transform">
                             &#x2715;
                         </button>
                     </Link>
 
                     {/* Form Fields */}
                     <form className="mt-8" onSubmit={handleSubmit}>
-                        <div className="mb-2 flex items-center">
+                        {/* First Name Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">First Name</label>
-                            <input name="firstName" value={formData.firstName} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Name" type="text" />
+                            <input
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Name"
+                                type="text"
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter your first name.
+                            </div>
                         </div>
-                        <div className="mb-2 flex items-center">
+
+                        {/* Last Name Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Last Name</label>
-                            <input name="lastName" value={formData.lastName} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Name" type="text" />
+                            <input
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Name"
+                                type="text"
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter your last name.
+                            </div>
                         </div>
-                        <div className="mb-2 flex items-center">
+
+                        {/* Employee No Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Employee No</label>
-                            <input name="employeeNo" value={formData.employeeNo} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Number" type="number" />
+                            <input
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Number"
+                                type="text"
+                                inputMode="numeric"
+                                onInput={handleNumericInput} // Handle numeric-only input
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter your employee number.
+                            </div>
                         </div>
-                        <div className="mb-2 flex items-center">
+
+                        {/* Employee Email Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Employee Email</label>
-                            <input name="employeeEmail" value={formData.employeeEmail} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Email" type="email" />
+                            <input
+                                name="employeeEmail"
+                                value={formData.employeeEmail}
+                                onChange={handleChange}
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Email"
+                                type="email"
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter your work email address.
+                            </div>
                         </div>
-                        <div className="mb-2 flex items-center">
+
+                        {/* Mobile No Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Mobile No</label>
-                            <input name="mobileNo" value={formData.mobileNo} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Number" type="tel" />
+                            <input
+                                name="mobileNo"
+                                value={formData.mobileNo}
+                                onChange={handleChange}
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Number"
+                                type="tel"
+                                inputMode="numeric"
+                                onInput={handleNumericInput}
+                            // Handle numeric-only input
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter your mobile number.
+                            </div>
                         </div>
-                        <div className="mb-2 flex items-center">
+
+                        {/* Project Name Field */}
+                        <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Project Name</label>
-                            <input name="projectName" value={formData.projectName} onChange={handleChange} className="w-2/3 p-2 border rounded" placeholder="Enter Project Name" type="text" />
+                            <input
+                                name="projectName"
+                                value={formData.projectName}
+                                onChange={handleChange}
+                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                placeholder="Enter Project Name"
+                                type="text"
+                            />
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter the project name you are working on.
+                            </div>
                         </div>
+
                         {/* Create Button */}
                         <div className="mb-2">
-                            <button type="submit" className="w-full p-1 bg-orange-400 text-white rounded hover:bg-orange-500 transition">CREATE</button>
+                            <button type="submit" className="w-48 p-1 bg-orange-400 text-white rounded hover:bg-orange-500 transition ml-36">
+                                CREATE
+                            </button>
+                        </div>
+
+                        {/* Mobile OTP Field */}
+                        <div className="mb-2 flex items-center relative group">
+                            <label className="w-1/3 mb-1">Mobile OTP</label>
+                            <div className="w-2/3 flex items-center">
+                                <input
+                                    className="w-3/4 p-2 border rounded hover:border-orange-400"
+                                    placeholder="Enter OTP"
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={6}
+                                />
+                                <a href="#" className="text-orange-400 text-sm ml-4 group-hover:underline">Resend OTP</a>
+                            </div>
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter the 6-digit OTP sent to your mobile.
+                            </div>
+                        </div>
+
+                        {/* Email OTP Field */}
+                        <div className="mb-2 flex items-center relative group">
+                            <label className="w-1/3 mb-1">Email OTP</label>
+                            <div className="w-2/3 flex items-center">
+                                <input
+                                    className="w-3/4 p-2 border rounded hover:border-orange-400"
+                                    placeholder="Enter OTP"
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={6}
+                                />
+                                <a href="#" className="text-orange-400 text-sm ml-4 group-hover:underline">Resend OTP</a>
+                            </div>
+                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Enter the 6-digit OTP sent to your email.
+                            </div>
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="mb-2">
+                            <Link to="/thankyou">
+                                <button className="w-48 p-1 bg-orange-400 text-white rounded hover:bg-orange-500 transition ml-36">SUBMIT</button>
+                            </Link>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
