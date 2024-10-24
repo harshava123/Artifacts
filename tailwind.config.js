@@ -23,6 +23,13 @@ module.exports = {
           "100%": { opacity: "1", color: "rgba(34, 197, 94, 1)" }, // Solid green
         },
       },
+      // Add custom input styles
+      borderRadius: {
+        'curvy': '30px', // Add a custom border radius
+      },
+      transitionProperty: {
+        'input': 'border, box-shadow', // Add custom transition properties for input fields
+      },
     },
   },
   variants: {

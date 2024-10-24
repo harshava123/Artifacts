@@ -10,8 +10,13 @@ function Registration() {
         employeeNo: '',
         employeeEmail: '',
         mobileNo: '',
-        projectName: ''
+        projectName: '',
+        projectNameInput: '' // State for 'Others' project name input
     });
+    
+    const [emailError, setEmailError] = useState('');
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [otpVisible, setOtpVisible] = useState(false); // State to manage OTP fields visibility
 
     // Function to handle numeric-only input
     const handleNumericInput = (e) => {
@@ -22,7 +27,16 @@ function Registration() {
 
     // Handle form field changes
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        // Validate email if it's the email field
+        if (name === 'employeeEmail') {
+            const valid = /^[a-zA-Z0-9._%+-]+@artihcus\.com$/.test(value);
+            setIsEmailValid(valid);
+            setEmailError(valid ? '' : 'Email must end with @artihcus.com');
+        }
+
+        setFormData({ ...formData, [name]: value });
     };
 
     // Generate random username and password
@@ -53,6 +67,10 @@ function Registration() {
             password,
         };
 
+        if (!isEmailValid) {
+            return; // Prevent submission if email is invalid
+        }
+
         try {
             const response = await fetch('http://localhost:5000/register', {
                 method: 'POST',
@@ -61,7 +79,7 @@ function Registration() {
             });
 
             if (response.ok) {
-                navigate('/thankyou');
+                setOtpVisible(true); // Show OTP fields after successful registration
             } else {
                 console.error('Error submitting form');
             }
@@ -71,8 +89,8 @@ function Registration() {
     };
 
     return (
-        <div className="h-screen flex bg-cover bg-center " style={{ backgroundImage: `url(${back})` }}>
-            <div className="flex-1 flex items-center" style={{ marginLeft: '10%', maxWidth: '500px' }}>
+        <div className="h-screen flex bg-cover bg-center" style={{ backgroundImage: `url(${back})` }}>
+            <div className="flex-1 flex items-center" style={{ marginLeft: '25%', maxWidth: '500px' }}>
                 <div className="bg-white border-2 border-orange-400 rounded-xl shadow-lg p-3 relative">
                     <img src={logo} width={150} height={100} alt="logo" className="mb-2 ml-36" />
                     <Link to="/">
@@ -89,7 +107,7 @@ function Registration() {
                                 name="firstName"
                                 value={formData.firstName}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300"
                                 placeholder="Enter Name"
                                 type="text"
                             />
@@ -105,7 +123,7 @@ function Registration() {
                                 name="lastName"
                                 value={formData.lastName}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300"
                                 placeholder="Enter Name"
                                 type="text"
                             />
@@ -121,7 +139,7 @@ function Registration() {
                                 name="employeeNo"
                                 value={formData.employeeNo}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300"
                                 placeholder="Enter Number"
                                 type="text"
                                 inputMode="numeric"
@@ -139,10 +157,13 @@ function Registration() {
                                 name="employeeEmail"
                                 value={formData.employeeEmail}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                className={`w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300 ${!isEmailValid ? 'border-red-500' : ''}`}
                                 placeholder="Enter Email"
                                 type="email"
                             />
+                            {emailError && (
+                                <div className="text-red-500 text-xs mt-1">{emailError}</div>
+                            )}
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 Enter your work email address.
                             </div>
@@ -155,7 +176,7 @@ function Registration() {
                                 name="mobileNo"
                                 value={formData.mobileNo}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
+                                className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300"
                                 placeholder="Enter Number"
                                 type="tel"
                                 inputMode="numeric"
@@ -169,76 +190,95 @@ function Registration() {
                         {/* Project Name Field */}
                         <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Project Name</label>
-                            <input
+                            <select
                                 name="projectName"
                                 value={formData.projectName}
                                 onChange={handleChange}
-                                className="w-2/3 p-2 border rounded hover:border-orange-400"
-                                placeholder="Enter Project Name"
-                                type="text"
-                            />
+                                className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300"
+                            >
+                                <option value="" disabled>Select Project</option>
+                                <option value="Daikin">Daikin</option>
+                                <option value="VMM">VMM</option>
+                                <option value="Somany">Somany</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            {formData.projectName === "Others" && (
+                                <input
+                                    name="projectNameInput"
+                                    value={formData.projectNameInput}
+                                    onChange={(e) => setFormData({ ...formData, projectNameInput: e.target.value })}
+                                    className="w-2/3 p-2 border rounded-full hover:border-orange-400 transition duration-300 mt-2"
+                                    placeholder="Enter Project Name"
+                                    type="text"
+                                />
+                            )}
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Enter the project name you are working on.
+                                Select your project name.
                             </div>
                         </div>
 
-                        <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
-                            {/* Submit Button */}
+                        {/* Submit Button */}
+                        <div className='mb-4 flex justify-center"'>
                             <button
-                                type="button"
-                                onClick={handleSubmit}
-                                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
+                                type="submit"
+                                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-36 "
                             >
                                 CREATE
                             </button>
                         </div>
-
-                        {/* Mobile OTP Field */}
-                        <div className="mb-2 flex items-center relative group">
-                            <label className="w-1/3 mb-1">Mobile OTP</label>
-                            <div className="w-2/3 flex flex-col">
-                                <input
-                                    className="p-2 border rounded hover:border-orange-400"
-                                    placeholder="Enter OTP"
-                                    type="text"
-                                    inputMode="numeric"
-                                    maxLength={6}
-                                />
-                                <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
-                            </div>
-                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Enter the OTP sent to your mobile number.
-                            </div>
-                        </div>
-
-                        {/* Email OTP Field */}
-                        <div className="mb-2 flex items-center relative group">
-                            <label className="w-1/3 mb-1">Email OTP</label>
-                            <div className="w-2/3 flex flex-col">
-                                <input
-                                    className="p-2 border rounded hover:border-orange-400"
-                                    placeholder="Enter OTP"
-                                    type="text"
-                                    inputMode="numeric"
-                                    maxLength={6}
-                                />
-                                <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
-                            </div>
-                            <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Enter the OTP sent to your email address.
-                            </div>
-                        </div>
-                        <div className="mb-4 flex justify-center"> {/* Align the button to the right */}
-                            {/* Submit Button */}
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-10"
-                            >
-                                SUBMIT
-                            </button>
-                        </div>
                     </form>
+
+                    {otpVisible && ( // Conditionally render OTP fields
+                        <>
+                            {/* Mobile OTP Field */}
+                            <div className="mb-2 flex items-center relative group">
+                                <label className="w-1/3 mb-1">Mobile OTP</label>
+                                <div className="w-2/3 flex flex-col">
+                                    <input
+                                        className="p-2 border rounded-full hover:border-orange-400 transition duration-300"
+                                        placeholder="Enter OTP"
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={6}
+                                    />
+                                    <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
+                                </div>
+                                <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    Enter the OTP sent to your mobile number.
+                                </div>
+                            </div>
+
+                            {/* Email OTP Field */}
+                            <div className="mb-2 flex items-center relative group">
+                                <label className="w-1/3 mb-1">Email OTP</label>
+                                <div className="w-2/3 flex flex-col">
+                                    <input
+                                        className="p-2 border rounded-full hover:border-orange-400 transition duration-300"
+                                        placeholder="Enter OTP"
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={6}
+                                    />
+                                    <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
+                                </div>
+                                <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    Enter the OTP sent to your email.
+                                </div>
+                            </div>
+
+                            <Link to="Thankyou">
+                                <div className="mb-4 flex justify-center">
+                                    {/* Submit Button for OTP */}
+                                    <button
+                                        type="button"
+                                        className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-10"
+                                    >
+                                        SUBMIT
+                                    </button>
+                                </div>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

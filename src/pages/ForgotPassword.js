@@ -8,7 +8,6 @@ function ForgotPassword() {
   const location = useLocation();
   const [employeeIdentifier, setEmployeeIdentifier] = useState('');
   const [message, setMessage] = useState('');
-  const [isEmployeeVerified, setIsEmployeeVerified] = useState(false);
   const [isMobileOTPEnabled, setIsMobileOTPEnabled] = useState(false);
   const [isEmailOTPEnabled, setIsEmailOTPEnabled] = useState(false);
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
@@ -18,7 +17,6 @@ function ForgotPassword() {
   useEffect(() => {
     if (location.state && location.state.employeeIdentifier) {
       setEmployeeIdentifier(location.state.employeeIdentifier);
-      checkEmployeeExists(location.state.employeeIdentifier);
     }
   }, [location.state]);
 
@@ -26,55 +24,27 @@ function ForgotPassword() {
     e.target.value = e.target.value.replace(/\D/g, ""); // Replace any non-numeric characters
   };
 
-  const checkEmployeeExists = async (identifier) => {
-    try {
-      const response = await fetch('http://localhost:5000/check-employee', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ identifier }),
-      });
-      const data = await response.json();
-      if (data.exists) {
-        setMessage('Employee found. Proceed with OTP verification.');
-        setIsEmployeeVerified(true); // Enable next step (Mobile OTP)
-        setIsMobileOTPEnabled(true);
-      } else {
-        setMessage('Employee does not exist. Please check the email/number.');
-        setIsEmployeeVerified(false); // Reset if not found
-        setIsMobileOTPEnabled(false);
-      }
-    } catch (error) {
-      console.error('Error checking employee existence:', error);
-      setMessage('Error occurred while checking employee existence.');
-      setIsEmployeeVerified(false);
-      setIsMobileOTPEnabled(false);
-    }
-  };
-
-  // Function to simulate unlocking the next step after Mobile OTP is provided
-  const verifyMobileOTP = () => {
-    // Simulating the mobile OTP verification (Replace this with actual logic)
+  const handleSendOTP = () => {
+    // Show OTP fields after clicking Send OTP
+    setIsMobileOTPEnabled(true);
     setIsEmailOTPEnabled(true);
   };
 
-  // Function to simulate unlocking the next step after Email OTP is provided
-  const verifyEmailOTP = () => {
-    // Simulating the email OTP verification (Replace this with actual logic)
+  const verifyOTPs = () => {
+    // Show password fields after OTP verification
     setIsPasswordEnabled(true);
   };
 
   const handleSubmit = () => {
     // Add your submission logic here
-    alert('Form submitted!');
+    alert('Password reset successfully!');
   };
 
   return (
     <div className="h-screen flex bg-cover bg-center" style={{ backgroundImage: `url(${back})` }}>
       {/* Left Side - Form */}
       <div className="flex-1 flex items-center" style={{ marginLeft: '10%', maxWidth: '500px' }}>
-        <div className="bg-white border-2 border-orange-400 rounded-xl shadow-lg p-6 relative">
+        <div className="bg-white border-2 border-orange-400 rounded-3xl shadow-lg p-6 relative">
           {/* Logo at the top center */}
           <div className="flex justify-center mb-4">
             <img src={logo} alt="Logo" className="h-10" /> {/* Adjust height as needed */}
@@ -88,151 +58,132 @@ function ForgotPassword() {
           </Link>
 
           {/* Form Fields */}
-          <form className="mt-4"> {/* Reduced space to move closer to logo */}
-
+          <form className="mt-4">
             {/* Employee Email / Employee Number */}
-            <div className="mb-2 flex items-center"> {/* Reduced space */}
-              <label className="w-1/3 mb-1 text">Employee Email / Employee Number</label>
+            <div className="mb-2 flex items-center">
+              <label className="w-1/3 mb-1 text">Employee Email / Number</label>
               <input
-                className="w-2/3 p-2 border-2 rounded-xl  text-sm"
+                className="w-2/3 p-2 border-2 rounded-3xl text-sm"
                 placeholder="Enter Employee Email / Employee Number"
                 type="text"
                 value={employeeIdentifier}
                 onChange={(e) => setEmployeeIdentifier(e.target.value)}
-                onBlur={() => checkEmployeeExists(employeeIdentifier)}
               />
             </div>
-            <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
-              {/* Submit Button */}
+
+            <div className="mb-4 flex justify-end">
               <button
                 type="button"
-                onClick={handleSubmit}
+                onClick={handleSendOTP}
                 className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
               >
-                Send Otp
+                Send OTP
               </button>
             </div>
 
-            {message && (
-              <div className={`mb-4 ${message.includes("not exist") ? "text-red-500" : "text-green-500"}`}>
-                {message}
+            {/* Mobile OTP Field */}
+            {isMobileOTPEnabled && (
+              <div className="mb-2 flex items-center relative group">
+                <label className="w-1/3 mb-1">Mobile OTP</label>
+                <div className="w-2/3 flex flex-col relative">
+                  <input
+                    className="w-full p-2 border-2 rounded-3xl hover:border-orange-400 text-sm"
+                    placeholder="Enter OTP"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    onInput={handleNumericInput}
+                  />
+                  <a href="#" className="text-blue-500 text-sm mt-1 text-right group-hover:underline">
+                    Resend OTP
+                  </a>
+                </div>
               </div>
             )}
 
-            {/* Mobile OTP Field */}
-            <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
-              <label className="w-1/3 mb-1">Mobile OTP</label>
-              <div className="w-2/3 flex flex-col relative">
-                <input
-                  className="w-full p-2 border-2 rounded-xl hover:border-orange-400 text-sm"
-                  placeholder="Enter OTP"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  disabled={!isMobileOTPEnabled}
-                  onInput={handleNumericInput}
-                  onBlur={verifyMobileOTP} // Simulate OTP verification
-                />
-                <a href="#" className="text-blue-500 text-sm mt-1 text-right group-hover:underline">
-                  Resend OTP
-                </a>
-              </div>
-              <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Enter the 6-digit OTP sent to your mobile.
-              </div>
-            </div>
-
             {/* Email OTP Field */}
-            <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
-              <label className="w-1/3 mb-1">Email OTP</label>
-              <div className="w-2/3 flex flex-col relative">
-                <input
-                  className="w-full p-2 border-2 rounded-xl hover:border-orange-400 text-sm"
-                  placeholder="Enter OTP"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  disabled={!isEmailOTPEnabled}
-                  onInput={handleNumericInput}
-                  onBlur={verifyEmailOTP} // Simulate OTP verification
-                />
-                <a href="#" className="text-blue-500 text-sm mt-1 text-right group-hover:underline">
-                  Resend OTP
-                </a>
+            {isEmailOTPEnabled && (
+              <div className="mb-2 flex items-center relative group">
+                <label className="w-1/3 mb-1">Email OTP</label>
+                <div className="w-2/3 flex flex-col relative">
+                  <input
+                    className="w-full p-2 border-2 rounded-3xl hover:border-orange-400 text-sm"
+                    placeholder="Enter OTP"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    onInput={handleNumericInput}
+                  />
+                  <a href="#" className="text-blue-500 text-sm mt-1 text-right group-hover:underline">
+                    Resend OTP
+                  </a>
+                </div>
               </div>
-              <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Enter the 6-digit OTP sent to your email.
-              </div>
+            )}
 
-            </div>
-            <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
-              {/* Submit Button */}
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
-              >
-                SUBMIT
-              </button>
-            </div>
-           
+            {isEmailOTPEnabled && (
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={verifyOTPs}
+                  className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
+                >
+                  Submit
+                </button>
+              </div>
+            )}
 
             {/* New Password Field */}
-            <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
-              <label className="w-1/3 mb-1">New Password</label>
-              <div className="relative w-2/3">
-                <input
-                  className="w-full p-2 border-2 rounded-xl hover:border-orange-400 pr-10 text-sm"
-                  placeholder="Enter Password"
-                  type={isNewPasswordVisible ? "text" : "password"}
-                  disabled={!isPasswordEnabled}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
-                >
-                  {isNewPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
-                </button>
-              </div>
-              <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Password must be at least 8 characters long.
-              </div>
-            </div>
+            {isPasswordEnabled && (
+              <>
+                <div className="mb-2 flex items-center relative group">
+                  <label className="w-1/3 mb-1">New Password</label>
+                  <div className="relative w-2/3">
+                    <input
+                      className="w-full p-2 border-2 rounded-3xl hover:border-orange-400 pr-10 text-sm"
+                      placeholder="Enter Password"
+                      type={isNewPasswordVisible ? "text" : "password"}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
+                    >
+                      {isNewPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
+                    </button>
+                  </div>
+                </div>
 
-            {/* Confirm Password Field */}
-            <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
-              <label className="w-1/3 mb-1">Confirm Password</label>
-              <div className="relative w-2/3">
-                <input
-                  className="w-full p-2 border-2 rounded-xl hover:border-orange-400 pr-10 text-sm"
-                  placeholder="Re-Enter Password"
-                  type={isConfirmPasswordVisible ? "text" : "password"}
-                  disabled={!isPasswordEnabled}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
-                >
-                  {isConfirmPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
-                </button>
-              </div>
-              <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Make sure both passwords match.
-              </div>
-            </div>
+                {/* Confirm Password Field */}
+                <div className="mb-2 flex items-center relative group">
+                  <label className="w-1/3 mb-1">Confirm Password</label>
+                  <div className="relative w-2/3">
+                    <input
+                      className="w-full p-2 border-2 rounded-3xl hover:border-orange-400 pr-10 text-sm"
+                      placeholder="Re-Enter Password"
+                      type={isConfirmPasswordVisible ? "text" : "password"}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
+                    >
+                      {isConfirmPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
+                    </button>
+                  </div>
+                </div>
 
-            <div className="mb-4 flex justify-cenrter"> {/* Align the button to the right */}
-              {/* Submit Button */}
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-40 mt-6"
-              >
-                CREATE
-              </button>
-            </div>
+                <div className="mb-4 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition mt-6"
+                  >
+                    CREATE
+                  </button>
+                </div>
+              </>
+            )}
           </form>
         </div>
       </div>
