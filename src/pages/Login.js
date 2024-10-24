@@ -96,12 +96,12 @@ function Login() {
                   placeholder="Enter Password"
                   onMouseEnter={() => setHoveredField("password")}
                   onMouseLeave={() => setHoveredField(null)}
-                  className="w-full p-3 border-[1.4px] border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-black placeholder-orange-500 opacity-60" // Custom black border thickness
+                  className="w-full p-3 border-[1.4px] border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-black placeholder-orange-500 opacity-60"
                 />
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-400 z-10" // Adjusted positioning and z-index
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-400 z-10"
                 >
                   {isPasswordVisible ? <FaRegEye /> : <FaEyeSlash />}
                 </button>
@@ -111,6 +111,7 @@ function Login() {
                   {tooltipMessages.password}
                 </div>
               </div>
+
 
             </div>
 
