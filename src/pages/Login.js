@@ -153,7 +153,7 @@ function Login() {
       </div>
 
       {/* Right side: Welcome section */}
-      <div className="mt-32 mr-[42.5px] text-center">
+      <div className="mt-32 mr-32 text-center">
         <h2 className="text-5xl font-bold mb-4 font-oleo">Welcome</h2>
         <p className="flex flex-col font-bold text-blue-800 text-lg mb-6">
           <span className="animate-pulse">Hello! Thank you for choosing us.</span>
