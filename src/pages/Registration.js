@@ -130,11 +130,13 @@ function Registration() {
                         <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Employee No</label>
                             <input
+                                name="employeeNo"
+                                value={formData.employeeNo}
+                                onChange={handleChange}
                                 className="w-2/3 p-2 border rounded hover:border-orange-400"
                                 placeholder="Enter Number"
-                                type="text"
+                                type="number"
                                 inputMode="numeric"
-                                onInput={handleNumericInput} // Handle numeric-only input
                             />
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 Enter your employee number.
@@ -169,7 +171,7 @@ function Registration() {
                                 type="tel"
                                 inputMode="numeric"
                                 onInput={handleNumericInput}
-                            // Handle numeric-only input
+// Handle numeric-only input
                             />
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 Enter your mobile number.

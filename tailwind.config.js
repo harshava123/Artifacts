@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
+      fontFamily: {
+        oleo: ['"Oleo Script"', 'cursive'], // Adding Oleo Script as a custom font
+      },
       gradientColorStops: (theme) => ({
         "orange-400": "#F6B93B", // Example color
         "orange-600": "#D97319", // Example color
