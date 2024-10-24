@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState(''); // State for error message
   const [currentMessage, setCurrentMessage] = useState(0); // State to track which message is displayed
   const [hoveredField, setHoveredField] = useState(null); // State for hovering
   const navigate = useNavigate();
@@ -39,6 +40,24 @@ function Login() {
     setIsPasswordVisible(!isPasswordVisible); // Toggle the state
   };
 
+  const validateEmail = (email) => {
+    // Check if email ends with @artihcus.com
+    const regex = /^[a-zA-Z0-9._%+-]+@artihcus\.com$/;
+    return regex.test(email);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    // Validate email on input change
+    if (!validateEmail(value)) {
+      setError("Email must end with '@artihcus.com'");
+    } else {
+      setError(""); // Clear error if valid
+    }
+  };
+
   return (
     <div
       className="h-screen flex bg-cover bg-center"
@@ -55,7 +74,6 @@ function Login() {
             <div className="absolute bottom-0 left-0 border-b-2 border-l-4 border-orange-300" style={{ width: '95px', height: '95px' }}></div>
             <div className="absolute bottom-0 right-0 border-b-2 border-r-4 border-orange-300" style={{ width: '70px', height: '45px' }}></div>
           </div>
-
 
           <div className="text-center mb-3 flex flex-col items-center">
             {/* Increased logo size, moved up by reducing margin-bottom */}
@@ -77,11 +95,12 @@ function Login() {
                   type="text"
                   placeholder="Employee Email / Number"
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={handleInputChange} // Use the new change handler
                   onMouseEnter={() => setHoveredField("email")}
                   onMouseLeave={() => setHoveredField(null)}
                   className="w-full p-3 border-[1.4px] border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-black placeholder-orange-500 opacity-60" // Custom black border thickness
                 />
+                {error && <p className="text-red-500 text-xs mt-1">{error}</p>} {/* Display error message */}
                 <div
                   className={`absolute top-1/2 left-full ml-4 transform -translate-y-1/2 bg-black text-white text-sm p-2 rounded shadow-lg transition-opacity duration-300 ${hoveredField === "email" ? "opacity-100" : "opacity-0"} w-48 max-w-sm`}
                 >
@@ -98,20 +117,12 @@ function Login() {
                   onMouseLeave={() => setHoveredField(null)}
                   className="w-full p-3 border-[1.4px] border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-black placeholder-orange-500 opacity-60"
                 />
-                {/* <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-400 z-10"
-                >
-                  {isPasswordVisible ? <FaRegEye /> : <FaEyeSlash />}
-                </button> */}
                 <div
                   className={`absolute top-1/2 left-full ml-4 transform -translate-y-1/2 bg-black text-white text-sm p-2 rounded shadow-lg transition-opacity duration-300 ${hoveredField === "password" ? "opacity-100" : "opacity-0"} w-48 max-w-sm`}
                 >
                   {tooltipMessages.password}
                 </div>
               </div>
-
 
             </div>
 

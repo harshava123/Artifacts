@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import back from '../images/back.jpg'; // Import the background image
-import logo from '../images/logo.jpg'; // Import the logo image
-import { Link, useLocation } from 'react-router-dom';
+import back from '../images/back.jpg';
+import logo from '../images/logo.jpg';
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 
 function ForgotPassword() {
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [employeeIdentifier, setEmployeeIdentifier] = useState('');
   const [message, setMessage] = useState('');
   const [isMobileOTPEnabled, setIsMobileOTPEnabled] = useState(false);
   const [isEmailOTPEnabled, setIsEmailOTPEnabled] = useState(false);
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
-  const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false); // State for New Password visibility
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false); // State for Confirm Password visibility
+  const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   useEffect(() => {
     if (location.state && location.state.employeeIdentifier) {
       setEmployeeIdentifier(location.state.employeeIdentifier);
+      setIsEditable(false);
     }
   }, [location.state]);
 
@@ -24,42 +27,55 @@ function ForgotPassword() {
     e.target.value = e.target.value.replace(/\D/g, ""); // Replace any non-numeric characters
   };
 
-  const handleSendOTP = () => {
-    // Show OTP fields after clicking Send OTP
-    setIsMobileOTPEnabled(true);
-    setIsEmailOTPEnabled(true);
+  const handleSendOTP = async () => {
+    // Check if employee exists in the database
+    const response = await fetch('http://localhost:5000/check-employee', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identifier: employeeIdentifier }),
+    });
+
+    const data = await response.json();
+    if (data.exists) {
+      setMessage(<span className="text-green-500">Email ID exists. Proceed.</span>);
+      setIsMobileOTPEnabled(true);
+      setIsEmailOTPEnabled(true);
+    } else {
+      setMessage(<span className="text-red-500">Email ID does not exist in the database.</span>);
+      setIsMobileOTPEnabled(false);
+      setIsEmailOTPEnabled(false);
+    }
   };
 
   const verifyOTPs = () => {
-    // Show password fields after OTP verification
     setIsPasswordEnabled(true);
   };
 
   const handleSubmit = () => {
-    // Add your submission logic here
-    alert('Password reset successfully!');
+    // Redirect to Congrats page after successful password reset
+    navigate('/Congrats'); // Use navigate to redirect to Congrats page
   };
 
   return (
     <div className="h-screen flex bg-cover bg-center" style={{ backgroundImage: `url(${back})` }}>
-      {/* Left Side - Form */}
       <div className="flex-1 flex items-center" style={{ marginLeft: '10%', maxWidth: '500px' }}>
         <div className="bg-white border-2 border-orange-400 rounded-3xl shadow-lg p-6 relative">
-          {/* Logo at the top center */}
           <div className="flex justify-center mb-4">
-            <img src={logo} alt="Logo" className="h-10" /> {/* Adjust height as needed */}
+            <img src={logo} alt="Logo" className="h-10" />
           </div>
 
-          {/* Close Button */}
           <Link to="/">
             <button className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-orange-500 hover:scale-110 transition duration-300 transform">
               &#x2715;
             </button>
           </Link>
 
-          {/* Form Fields */}
+          {/* Display message */}
+          {message && <div className="mb-2">{message}</div>}
+
           <form className="mt-4">
-            {/* Employee Email / Employee Number */}
             <div className="mb-2 flex items-center">
               <label className="w-1/3 mb-1 text">Employee Email / Number</label>
               <input
@@ -68,6 +84,7 @@ function ForgotPassword() {
                 type="text"
                 value={employeeIdentifier}
                 onChange={(e) => setEmployeeIdentifier(e.target.value)}
+                readOnly={!isEditable}
               />
             </div>
 
@@ -81,7 +98,6 @@ function ForgotPassword() {
               </button>
             </div>
 
-            {/* Mobile OTP Field */}
             {isMobileOTPEnabled && (
               <div className="mb-2 flex items-center relative group">
                 <label className="w-1/3 mb-1">Mobile OTP</label>
@@ -101,7 +117,6 @@ function ForgotPassword() {
               </div>
             )}
 
-            {/* Email OTP Field */}
             {isEmailOTPEnabled && (
               <div className="mb-2 flex items-center relative group">
                 <label className="w-1/3 mb-1">Email OTP</label>
@@ -133,7 +148,6 @@ function ForgotPassword() {
               </div>
             )}
 
-            {/* New Password Field */}
             {isPasswordEnabled && (
               <>
                 <div className="mb-2 flex items-center relative group">
@@ -149,12 +163,11 @@ function ForgotPassword() {
                       onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
                     >
-                      {isNewPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
+                      {isNewPasswordVisible ? <FaRegEye /> : <FaEyeSlash />}
                     </button>
                   </div>
                 </div>
 
-                {/* Confirm Password Field */}
                 <div className="mb-2 flex items-center relative group">
                   <label className="w-1/3 mb-1">Confirm Password</label>
                   <div className="relative w-2/3">
@@ -168,7 +181,7 @@ function ForgotPassword() {
                       onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400"
                     >
-                      {isConfirmPasswordVisible ? <FaRegEye /> : <FaEyeSlash />} {/* Toggle icon */}
+                      {isConfirmPasswordVisible ? <FaRegEye /> : <FaEyeSlash />}
                     </button>
                   </div>
                 </div>
