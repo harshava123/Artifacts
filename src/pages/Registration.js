@@ -12,6 +12,7 @@ function Registration() {
         mobileNo: '',
         projectName: ''
     });
+
     // Function to handle numeric-only input
     const handleNumericInput = (e) => {
         e.target.value = e.target.value.replace(/\D/g, ""); // Replace any non-numeric characters
@@ -25,37 +26,27 @@ function Registration() {
     };
 
     // Generate random username and password
-    // Generate random username and password
     const generateRandomCredentials = () => {
         const { firstName, lastName, employeeNo } = formData;
 
-        // Ensure values are present
-        const firstPart = firstName.slice(0, 3).toLowerCase(); // First 3 letters of first name
-        const middlePart = employeeNo.toString().slice(0, 2); // First 2 digits of employee number
-        const lastPart = lastName.slice(-3).toLowerCase(); // Last 3 letters of last name
+        const firstPart = firstName.slice(0, 3).toLowerCase();
+        const middlePart = employeeNo.toString().slice(0, 2);
+        const lastPart = lastName.slice(-3).toLowerCase();
 
-        // Define special characters
         const specialCharacters = '!@#$%^&*()_+[]{}|;:,.<>?';
-
-        // Pick a random special character
         const specialChar = specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length));
 
-        // Combine all parts to form the password
         const password = `${firstPart}${middlePart}${lastPart}${specialChar}`;
-
-        // Generate a random username
         const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 1000)}`;
 
         return { username, password };
     };
-
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { username, password } = generateRandomCredentials();
 
-        // Create a payload to send to the server
         const payload = {
             ...formData,
             username,
@@ -70,7 +61,6 @@ function Registration() {
             });
 
             if (response.ok) {
-                // If the request is successful, redirect to the thank you page
                 navigate('/thankyou');
             } else {
                 console.error('Error submitting form');
@@ -81,18 +71,16 @@ function Registration() {
     };
 
     return (
-        <div className="h-screen flex bg-cover bg-center" style={{ backgroundImage: `url(${back})` }}>
-            {/* Left Side - Form */}
+        <div className="h-screen flex bg-cover bg-center " style={{ backgroundImage: `url(${back})` }}>
             <div className="flex-1 flex items-center" style={{ marginLeft: '10%', maxWidth: '500px' }}>
                 <div className="bg-white border-2 border-orange-400 rounded-xl shadow-lg p-3 relative">
-                    <img src={logo} width={150} height={100} alt="logo" className="mb-2 ml-20" />
+                    <img src={logo} width={150} height={100} alt="logo" className="mb-2 ml-36" />
                     <Link to="/">
                         <button className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-orange-500 hover:scale-110 transition duration-300 transform">
                             &#x2715;
                         </button>
                     </Link>
 
-                    {/* Form Fields */}
                     <form className="mt-8" onSubmit={handleSubmit}>
                         {/* First Name Field */}
                         <div className="mb-2 flex items-center relative group">
@@ -135,8 +123,9 @@ function Registration() {
                                 onChange={handleChange}
                                 className="w-2/3 p-2 border rounded hover:border-orange-400"
                                 placeholder="Enter Number"
-                                type="number"
+                                type="text"
                                 inputMode="numeric"
+                                onInput={handleNumericInput}
                             />
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 Enter your employee number.
@@ -171,7 +160,6 @@ function Registration() {
                                 type="tel"
                                 inputMode="numeric"
                                 onInput={handleNumericInput}
-// Handle numeric-only input
                             />
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 Enter your mobile number.
@@ -194,9 +182,13 @@ function Registration() {
                             </div>
                         </div>
 
-                        {/* Create Button */}
-                        <div className="mb-2">
-                            <button type="submit" className="w-48 p-1 bg-orange-400 text-white rounded hover:bg-orange-500 transition ml-36">
+                        <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
+                            {/* Submit Button */}
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
+                            >
                                 CREATE
                             </button>
                         </div>
@@ -204,47 +196,49 @@ function Registration() {
                         {/* Mobile OTP Field */}
                         <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Mobile OTP</label>
-                            <div className="w-2/3 flex items-center">
+                            <div className="w-2/3 flex flex-col">
                                 <input
-                                    className="w-3/4 p-2 border rounded hover:border-orange-400"
+                                    className="p-2 border rounded hover:border-orange-400"
                                     placeholder="Enter OTP"
                                     type="text"
                                     inputMode="numeric"
                                     maxLength={6}
                                 />
-                                <a href="#" className="text-orange-400 text-sm ml-4 group-hover:underline">Resend OTP</a>
+                                <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
                             </div>
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Enter the 6-digit OTP sent to your mobile.
+                                Enter the OTP sent to your mobile number.
                             </div>
                         </div>
 
                         {/* Email OTP Field */}
                         <div className="mb-2 flex items-center relative group">
                             <label className="w-1/3 mb-1">Email OTP</label>
-                            <div className="w-2/3 flex items-center">
+                            <div className="w-2/3 flex flex-col">
                                 <input
-                                    className="w-3/4 p-2 border rounded hover:border-orange-400"
+                                    className="p-2 border rounded hover:border-orange-400"
                                     placeholder="Enter OTP"
                                     type="text"
                                     inputMode="numeric"
                                     maxLength={6}
                                 />
-                                <a href="#" className="text-orange-400 text-sm ml-4 group-hover:underline">Resend OTP</a>
+                                <a href="#" className="text-orange-400 text-sm mt-1 text-right group-hover:underline">Resend OTP</a>
                             </div>
                             <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Enter the 6-digit OTP sent to your email.
+                                Enter the OTP sent to your email address.
                             </div>
                         </div>
-
-                        {/* Submit Button */}
-                        <div className="mb-2">
-                            <Link to="/thankyou">
-                                <button className="w-48 p-1 bg-orange-400 text-white rounded hover:bg-orange-500 transition ml-36">SUBMIT</button>
-                            </Link>
+                        <div className="mb-4 flex justify-center"> {/* Align the button to the right */}
+                            {/* Submit Button */}
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-10"
+                            >
+                                SUBMIT
+                            </button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import back from '../images/back.jpg'; // Import the background image
 import logo from '../images/logo.jpg'; // Import the logo image
 import { Link, useLocation } from 'react-router-dom';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
- 
+
 function ForgotPassword() {
   const location = useLocation();
   const [employeeIdentifier, setEmployeeIdentifier] = useState('');
@@ -14,18 +14,18 @@ function ForgotPassword() {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
   const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false); // State for New Password visibility
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false); // State for Confirm Password visibility
- 
+
   useEffect(() => {
     if (location.state && location.state.employeeIdentifier) {
       setEmployeeIdentifier(location.state.employeeIdentifier);
       checkEmployeeExists(location.state.employeeIdentifier);
     }
   }, [location.state]);
- 
+
   const handleNumericInput = (e) => {
     e.target.value = e.target.value.replace(/\D/g, ""); // Replace any non-numeric characters
   };
- 
+
   const checkEmployeeExists = async (identifier) => {
     try {
       const response = await fetch('http://localhost:5000/check-employee', {
@@ -52,24 +52,24 @@ function ForgotPassword() {
       setIsMobileOTPEnabled(false);
     }
   };
- 
+
   // Function to simulate unlocking the next step after Mobile OTP is provided
   const verifyMobileOTP = () => {
     // Simulating the mobile OTP verification (Replace this with actual logic)
     setIsEmailOTPEnabled(true);
   };
- 
+
   // Function to simulate unlocking the next step after Email OTP is provided
   const verifyEmailOTP = () => {
     // Simulating the email OTP verification (Replace this with actual logic)
     setIsPasswordEnabled(true);
   };
- 
+
   const handleSubmit = () => {
     // Add your submission logic here
     alert('Form submitted!');
   };
- 
+
   return (
     <div className="h-screen flex bg-cover bg-center" style={{ backgroundImage: `url(${back})` }}>
       {/* Left Side - Form */}
@@ -79,17 +79,17 @@ function ForgotPassword() {
           <div className="flex justify-center mb-4">
             <img src={logo} alt="Logo" className="h-10" /> {/* Adjust height as needed */}
           </div>
- 
+
           {/* Close Button */}
           <Link to="/">
             <button className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-orange-500 hover:scale-110 transition duration-300 transform">
               &#x2715;
             </button>
           </Link>
- 
+
           {/* Form Fields */}
           <form className="mt-4"> {/* Reduced space to move closer to logo */}
- 
+
             {/* Employee Email / Employee Number */}
             <div className="mb-2 flex items-center"> {/* Reduced space */}
               <label className="w-1/3 mb-1 text">Employee Email / Employee Number</label>
@@ -103,17 +103,22 @@ function ForgotPassword() {
               />
             </div>
             <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
-              <button className="bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition w-48">
-                Send OTP
+              {/* Submit Button */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
+              >
+                Send Otp
               </button>
             </div>
- 
+
             {message && (
               <div className={`mb-4 ${message.includes("not exist") ? "text-red-500" : "text-green-500"}`}>
                 {message}
               </div>
             )}
- 
+
             {/* Mobile OTP Field */}
             <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
               <label className="w-1/3 mb-1">Mobile OTP</label>
@@ -136,7 +141,7 @@ function ForgotPassword() {
                 Enter the 6-digit OTP sent to your mobile.
               </div>
             </div>
- 
+
             {/* Email OTP Field */}
             <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
               <label className="w-1/3 mb-1">Email OTP</label>
@@ -158,8 +163,20 @@ function ForgotPassword() {
               <div className="absolute left-full ml-2 w-48 bg-gray-800 text-white text-xs rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 Enter the 6-digit OTP sent to your email.
               </div>
+
             </div>
- 
+            <div className="mb-4 flex justify-end"> {/* Align the button to the right */}
+              {/* Submit Button */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-80"
+              >
+                SUBMIT
+              </button>
+            </div>
+           
+
             {/* New Password Field */}
             <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
               <label className="w-1/3 mb-1">New Password</label>
@@ -182,7 +199,7 @@ function ForgotPassword() {
                 Password must be at least 8 characters long.
               </div>
             </div>
- 
+
             {/* Confirm Password Field */}
             <div className="mb-2 flex items-center relative group"> {/* Reduced space */}
               <label className="w-1/3 mb-1">Confirm Password</label>
@@ -205,20 +222,22 @@ function ForgotPassword() {
                 Make sure both passwords match.
               </div>
             </div>
- 
-            {/* Submit Button */}
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="md:w-48 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-36 mr-2"
-            >
-              SUBMIT
-            </button>
+
+            <div className="mb-4 flex justify-cenrter"> {/* Align the button to the right */}
+              {/* Submit Button */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="md:w-32 bg-orange-400 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition ml-40 mt-6"
+              >
+                CREATE
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
   );
 }
- 
+
 export default ForgotPassword;
