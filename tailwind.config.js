@@ -23,12 +23,20 @@ module.exports = {
           "100%": { opacity: "1", color: "rgba(34, 197, 94, 1)" }, // Solid green
         },
       },
-      // Add custom input styles
       borderRadius: {
         'curvy': '30px', // Add a custom border radius
       },
       transitionProperty: {
         'input': 'border, box-shadow', // Add custom transition properties for input fields
+      },
+      // Adding custom styles for hiding scrollbar
+      screens: {
+        'hide-scrollbar': { 'raw': 'overflow-y: hidden;' }, // Custom screen to hide scrollbar
+      },
+      // Custom input styles
+      // You can add more custom styles here as needed
+      spacing: {
+        '30px': '30px', // Custom spacing example
       },
     },
   },

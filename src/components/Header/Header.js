@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from "../../images/logo.jpg";
 import { MdWbSunny, MdNightsStay } from 'react-icons/md'; // Using Material Design icons
- 
+
 function Header() {
     const [darkMode, setDarkMode] = useState(false);
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
- 
+
     // Toggle dark mode
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -16,7 +16,7 @@ function Header() {
             document.documentElement.classList.remove('dark');
         }
     };
- 
+
     useEffect(() => {
         const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (prefersDarkMode) {
@@ -24,11 +24,11 @@ function Header() {
             document.documentElement.classList.add('dark');
         }
     }, []);
- 
+
     // Handle scroll to hide and show the header
     useEffect(() => {
         let lastScrollY = window.scrollY;
- 
+
         const handleScroll = () => {
             if (window.scrollY > lastScrollY) {
                 // Scrolling down
@@ -39,28 +39,28 @@ function Header() {
             }
             lastScrollY = window.scrollY;
         };
- 
+
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
- 
+
     return (
         <div
-            className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${isHeaderVisible ? 'opacity-100' : 'opacity-0'} bg-white bg-opacity-70 backdrop-blur-lg shadow-md`}
+            className={`fixed top-0 z-50 w-full transition-all duration-500 ease-in-out ${isHeaderVisible ? 'opacity-100' : 'opacity-0'} bg-white bg-opacity-50 backdrop-blur-lg shadow-md`}
         >
-            <div className="max-w-4xl max-auto flex justify-between items-center px-4 py-0.5 md:px-6 md:py-1.5"> {/* Reduced padding for height */}
-                <Link to="/">
-                    <img src={logo} alt="logo" className="w-32.5 h-12 object-contain" /> {/* Reduced logo size */}
+            <div className="max-w-full mx-auto flex items-center px-4 py-2 md:px-6 md:py-3 ">
+                <Link to="/" className="flex items-center w-80 ">
+                    <img src={logo} alt="logo" className="w-32 h-12 object-contain" />
                 </Link>
- 
-                
+                {/* Dark Mode Toggle Button */}
+                {/* <button onClick={toggleDarkMode} className="ml-auto">
+                    {darkMode ? <MdNightsStay /> : <MdWbSunny />}
+                </button> */}
             </div>
         </div>
     );
 }
- 
+
 export default Header;
- 
- 

@@ -9,10 +9,12 @@ function Layout() {
     <Router> {/* Wrap your component in Router */}
       <Fragment>
         <Header />
-        <div>
-          <Routers />
+        <div className="flex flex-col min-h-screen overflow-hidden"> {/* Prevent scrollbar */}
+          <main className="flex-grow pt-16 pb-16 overflow-hidden"> {/* Padding for header and footer */}
+            <Routers /> {/* Your main content goes here */}
+          </main>
         </div>
-        <Footer/>
+        <Footer />
       </Fragment>
     </Router>
   );
